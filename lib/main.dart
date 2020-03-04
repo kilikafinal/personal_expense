@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:personal_expense/widget/transaction_list.dart';
+import 'package:personal_expense/widget/user_transaction.dart';
 
-import 'transaction.dart';
+import 'model/transaction.dart';
 
 void main() => runApp(MyApp());
 
@@ -15,11 +18,8 @@ class MyApp extends StatelessWidget {
 }
 
 class myHomePage extends StatelessWidget {
-  final List<Transaction> transactions = [
-    Transaction(id: "1", title: "hello", amount: 2.2, date: DateTime.now()),
-    Transaction(id: "2", title: "2lo", amount: 2.2, date: DateTime.now()),
-    Transaction(id: "3", title: "3lo", amount: 2.2, date: DateTime.now()),
-  ];
+  String titleInput;
+  String amountInput;
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +28,7 @@ class myHomePage extends StatelessWidget {
         title: Text("app bar"),
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Card(
             child: Container(
@@ -36,27 +37,7 @@ class myHomePage extends StatelessWidget {
               color: Colors.blue,
             ),
           ),
-          Column(
-              children: transactions
-                  .map((e) => Card(
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                              child: Icon(
-                                Icons.ac_unit,
-                                color: Colors.blue,
-                              ),
-                            ),
-                            Column(
-                              children: <Widget>[
-                                Text(e.title),
-                                Text(e.amount.toString()),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ))
-                  .toList()),
+          UserTransaction(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
@@ -70,9 +51,9 @@ class myHomePage extends StatelessWidget {
                 children: <Widget>[
                   Text("right side"),
                 ],
-              )
+              ),
             ],
-          )
+          ),
         ],
       ),
     );
