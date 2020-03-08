@@ -11,25 +11,28 @@ class TransactionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 350,
         child: transactions.isEmpty
-            ? Column(
-                children: <Widget>[
-                  Text(
-                    "hello",
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    height: 200,
-                    child: Image.asset(
-                      "assets/images/waiting.png",
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                ],
+            ? LayoutBuilder(
+                builder: (ctx, constraints) {
+                  return Column(
+                    children: <Widget>[
+                      Text(
+                        "hello",
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        height: constraints.maxHeight * .5,
+                        child: Image.asset(
+                          "assets/images/waiting.png",
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                    ],
+                  );
+                },
               )
             : ListView.builder(
                 itemBuilder: (ctx, index) {
@@ -50,12 +53,27 @@ class TransactionList extends StatelessWidget {
                       title: Text(transactions[index].title),
                       subtitle: Text(
                           DateFormat.yMMMd().format(transactions[index].date)),
-                      trailing: IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: () {
-                          deleteTransaction(transactions[index].id);
-                        },
-                      ),
+                      trailing: MediaQuery.of(context).size.width > 450
+                          ? FlatButton.icon(
+                              onPressed: () {
+                                deleteTransaction(transactions[index].id);
+                              },
+                              icon: const Icon(
+                                Icons.delete,
+                                color: Colors.red,
+                              ),
+                              label: const Text("delete"),
+                              textColor: Colors.red,
+                            )
+                          : IconButton(
+                              icon: const Icon(
+                                Icons.delete,
+                                color: Colors.red,
+                              ),
+                              onPressed: () {
+                                deleteTransaction(transactions[index].id);
+                              },
+                            ),
                     ),
                   );
                 },

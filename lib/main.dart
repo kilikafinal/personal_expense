@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:personal_expense/widget/chart.dart';
 import 'package:personal_expense/widget/new_transaction.dart';
 import 'package:personal_expense/widget/transaction_list.dart';
 
 import 'model/transaction.dart';
 
-void main() => runApp(MyApp());
+void main() {
+//  SystemChrome.setPreferredOrientations(
+//      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -45,6 +48,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String titleInput;
   String amountInput;
+
   final List<Transaction> _userTransactions = [
     Transaction(id: "1", title: "hello", amount: 2.2, date: DateTime.now()),
     Transaction(id: "2", title: "2lo", amount: 2.2, date: DateTime.now()),
@@ -90,20 +94,31 @@ class _MyHomePageState extends State<MyHomePage> {
         .toList();
   }
 
+  bool _showChart = true;
+
   @override
   Widget build(BuildContext context) {
+    var mediaQuery = MediaQuery.of(context);
+    var isLandscape = mediaQuery.orientation == Orientation.landscape;
+
+    var appBar = AppBar(
+      title: Text("Personal Expense"),
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () {
+            startAddNewTransaction(context);
+          },
+        ),
+      ],
+    );
+
+    double appHeight = (mediaQuery.size.height -
+        mediaQuery.padding.top -
+        appBar.preferredSize.height);
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Personal Expense"),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () {
-              startAddNewTransaction(context);
-            },
-          ),
-        ],
-      ),
+      appBar: appBar,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
@@ -115,8 +130,29 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Chart(_recentTransactions),
-            TransactionList(_userTransactions, deleteTransaction),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text("Show Chart"),
+                Switch(
+                  value: _showChart,
+                  onChanged: (val) {
+                    setState(() {
+                      _showChart = val;
+                    });
+                  },
+                ),
+              ],
+            ),
+            if (!isLandscape && _showChart)
+              Container(
+                height: appHeight * .3,
+                child: Chart(_recentTransactions),
+              ),
+            Container(
+              height: appHeight * .7,
+              child: TransactionList(_userTransactions, deleteTransaction),
+            ),
           ],
         ),
       ),

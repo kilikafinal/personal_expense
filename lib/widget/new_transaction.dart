@@ -45,7 +45,12 @@ class _NewTransactionState extends State<NewTransaction> {
     return Card(
       elevation: 2,
       child: Container(
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.only(
+          top: 10,
+          left: 10,
+          right: 10,
+          bottom: MediaQuery.of(context).padding.bottom + 10,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
