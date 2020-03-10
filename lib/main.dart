@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:personal_expense/widget/chart.dart';
 import 'package:personal_expense/widget/new_transaction.dart';
@@ -101,7 +102,21 @@ class _MyHomePageState extends State<MyHomePage> {
     var mediaQuery = MediaQuery.of(context);
     var isLandscape = mediaQuery.orientation == Orientation.landscape;
 
-    var appBar = AppBar(
+    var _buildCupertinoAppBar = CupertinoNavigationBar(
+      middle: Text("Personal Expense"),
+      trailing: Row(
+        children: <Widget>[
+          GestureDetector(
+            child: Icon(Icons.add),
+            onTap: () {
+              startAddNewTransaction(context);
+            },
+          )
+        ],
+      ),
+    );
+
+    var _buildAppBar = AppBar(
       title: Text("Personal Expense"),
       actions: <Widget>[
         IconButton(
@@ -115,10 +130,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
     double appHeight = (mediaQuery.size.height -
         mediaQuery.padding.top -
-        appBar.preferredSize.height);
+        _buildAppBar.preferredSize.height);
 
     return Scaffold(
-      appBar: appBar,
+      appBar: isLandscape ? _buildCupertinoAppBar : _buildAppBar,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
